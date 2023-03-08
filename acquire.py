@@ -1,10 +1,10 @@
-from env import host_name, user_name, password
+from env import host, user, password
 from pydataset import data
 import pandas as pd 
 import os
 
 # Helper Function (To gain connection to SQL database)
-def get_connection(db, user=user_name, host=host_name, password=password):
+def get_connection(db, user=user, host=host, password=password):
     '''
     This function uses my info from my env file to
     create a connection url to access the Codeup db.
