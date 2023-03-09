@@ -20,13 +20,17 @@ def get_titanic_data(cached=False):
     This function reads the titanic data from the Codeup db into a df,
     write it to a csv file, and returns the df.
     '''
+    if os.path.exists('titanic.csv'):
+        df = pd.read_csv('titanic.csv', index_col=0)
+    
+    else:
+        query = 'select * from passengers'
+        connection = get_connection('titanic_db')
+        df = pd.read_sql(query, connection)
+        df.to_csv('titanic.csv')
     # Create SQL query.
-    sql_query = 'SELECT * FROM passengers'
-    
-    # Read in DataFrame from Codeup db.
-    df = pd.read_sql(sql_query, get_connection('titanic_db'))
-    
     return df
+    
 
 # Make a function named get_iris_data that returns the data from the iris_db on the codeup 
 # data science database as a pandas data frame. The returned data frame should include the 
@@ -56,11 +60,29 @@ def get_iris_data(cached=False):
     
     return df
 
-# Once you've got your get_titanic_data and get_iris_data functions written, now it's time to 
-# add caching to them. To do this, edit the beginning of the function to check for a local 
-# filename like titanic.csv or iris.csv. If they exist, use the .csv file. If the file doesn't 
-# exist, then produce the SQL and pandas necessary to create a dataframe, then write the 
-# dataframe to a .csv file with the appropriate name. 
+
+
+
+
+
+def get_telco_data():
+    if os.path.exists('telco.csv'):
+        return pd.read_csv('telco.csv', index_col=0)
+    else:
+        telco_df = pd.read_sql(
+            '''
+            SELECT 
+                * 
+            FROM 
+                customers 
+                LEFT JOIN internet_service_types USING(internet_service_type_id)
+                LEFT JOIN payment_types USING(payment_type_id)
+                LEFT JOIN contract_types USING(contract_type_id)
+            ''', env.get_db_url('telco_churn')
+        )
+        telco_df.to_csv('telco.csv')
+        return pd.read_csv('telco.csv', index_col=0)
+
 
 # Converting titanic_db to local csv
     df.to_csv('titanic_df.csv')
@@ -69,3 +91,7 @@ def get_iris_data(cached=False):
 # Converting iris_db to local csv
     df.to_csv('iris_df.csv')
     os.path.isfile('iris_df.csv')
+
+# Converting telco_db to local csv
+    df.to_csv('telco.csv')
+    os.path.isfile('telco.csv')
