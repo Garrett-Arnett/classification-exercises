@@ -327,3 +327,8 @@ def prep_telco(df):
     train, validate, test = split_telco_data(df)
     
     return train, validate, test
+
+
+#-------------#####--------
+
+
